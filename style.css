@@ -633,5 +633,41 @@ header {
   }
 }
 
+.sidebar-toggle {
+  display: none; /* إخفاء الزر افتراضيًا */
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 1100;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block; /* إظهار الزر فقط على الشاشات الصغيرة */
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%; /* إخفاء الشريط الجانبي */
+    width: 80%;
+    max-width: 250px;
+    height: 100%;
+    background-color: #fff;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar.active {
+    left: 0; /* إظهار الشريط الجانبي عند الضغط على الزر */
+  }
+}
+
 
 
