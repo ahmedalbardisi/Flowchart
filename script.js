@@ -857,3 +857,170 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// Add this code at the end of your script.js file
+
+// Mobile drag and drop functionality for sidebar tools
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all tools from the sidebar
+  const sidebarTools = document.querySelectorAll('.tool');
+  const canvasContent = document.getElementById('canvasContent');
+  
+  // Add touch event listeners to each tool
+  sidebarTools.forEach(tool => {
+    tool.addEventListener('touchstart', handleToolTouchStart, { passive: false });
+    tool.addEventListener('touchmove', handleToolTouchMove, { passive: false });
+    tool.addEventListener('touchend', handleToolTouchEnd, { passive: false });
+  });
+  
+  // Variables to track touch drag state
+  let touchDragInProgress = false;
+  let currentDragTool = null;
+  let touchOffsetX = 0;
+  let touchOffsetY = 0;
+  let ghostElement = null;
+  
+  // Handle touch start on a tool
+  function handleToolTouchStart(event) {
+    touchDragInProgress = true;
+    currentDragTool = this;
+    
+    // Create ghost element for visual feedback
+    ghostElement = document.createElement('div');
+    ghostElement.classList.add('tool', 'ghost-tool');
+    ghostElement.textContent = this.textContent;
+    ghostElement.dataset.shape = this.dataset.shape;
+    ghostElement.style.position = 'absolute';
+    ghostElement.style.opacity = '0.7';
+    ghostElement.style.zIndex = '1000';
+    
+    // Initial ghost position at touch point
+    const touch = event.touches[0];
+    const toolRect = this.getBoundingClientRect();
+    touchOffsetX = touch.clientX - toolRect.left;
+    touchOffsetY = touch.clientY - toolRect.top;
+    
+    ghostElement.style.width = `${toolRect.width}px`;
+    ghostElement.style.height = `${toolRect.height}px`;
+    ghostElement.style.left = `${touch.clientX - touchOffsetX}px`;
+    ghostElement.style.top = `${touch.clientY - touchOffsetY}px`;
+    
+    // Add ghost to body
+    document.body.appendChild(ghostElement);
+    
+    // Prevent default to avoid scrolling while dragging
+    event.preventDefault();
+  }
+  
+  // Handle touch move while dragging
+  function handleToolTouchMove(event) {
+    if (!touchDragInProgress || !ghostElement) return;
+    
+    const touch = event.touches[0];
+    
+    // Update ghost position
+    ghostElement.style.left = `${touch.clientX - touchOffsetX}px`;
+    ghostElement.style.top = `${touch.clientY - touchOffsetY}px`;
+    
+    // Prevent default to avoid scrolling while dragging
+    event.preventDefault();
+  }
+  
+  // Handle touch end - "drop" functionality
+  function handleToolTouchEnd(event) {
+    if (!touchDragInProgress || !currentDragTool || !ghostElement) return;
+    
+    // Check if the touch end position is over the canvas
+    const touch = event.changedTouches[0];
+    const canvasRect = canvasContent.getBoundingClientRect();
+    
+    if (
+      touch.clientX >= canvasRect.left &&
+      touch.clientX <= canvasRect.right &&
+      touch.clientY >= canvasRect.top &&
+      touch.clientY <= canvasRect.bottom
+    ) {
+      // Convert touch position to canvas coordinates
+      const x = (touch.clientX - canvasRect.left) / scale;
+      const y = (touch.clientY - canvasRect.top) / scale;
+      
+      // Create the node
+      createNode(currentDragTool.dataset.shape, x, y, null, "", true);
+    }
+    
+    // Clean up
+    if (ghostElement && ghostElement.parentNode) {
+      ghostElement.parentNode.removeChild(ghostElement);
+    }
+    ghostElement = null;
+    touchDragInProgress = false;
+    currentDragTool = null;
+    
+    // Prevent default behavior
+    event.preventDefault();
+  }
+  
+  // Add touch cancel handler
+  document.addEventListener('touchcancel', function() {
+    if (ghostElement && ghostElement.parentNode) {
+      ghostElement.parentNode.removeChild(ghostElement);
+    }
+    ghostElement = null;
+    touchDragInProgress = false;
+    currentDragTool = null;
+  });
+  
+  // Improve existing node dragging on mobile
+  const nodesContainer = document.getElementById('nodesContainer');
+  
+  // Enhanced touchstart handler for nodes
+  nodesContainer.addEventListener('touchstart', function(e) {
+    // Find if touch started on a node (but not on a port or delete button)
+    const nodeElement = findNodeElement(e.target);
+    
+    if (!nodeElement || 
+        e.target.classList.contains('port') || 
+        e.target.classList.contains('delete-btn')) {
+      return;
+    }
+    
+    // Find the node data
+    const nodeId = nodeElement.dataset.id;
+    const nodeData = nodes.find(n => n.id === nodeId);
+    
+    if (nodeData) {
+      currentDraggingNode = nodeData;
+      const touch = e.touches[0];
+      const rect = nodeElement.getBoundingClientRect();
+      dragOffsetX = touch.clientX - rect.left;
+      dragOffsetY = touch.clientY - rect.top;
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  // Helper function to find node element
+  function findNodeElement(element) {
+    while (element && !element.classList.contains('node')) {
+      element = element.parentElement;
+      if (element === document.body) return null;
+    }
+    return element;
+  }
+  
+  // Add CSS for ghost tool
+  const style = document.createElement('style');
+  style.textContent = `
+    .ghost-tool {
+      background: rgba(75, 101, 132, 0.7);
+      color: white;
+      border: 2px dashed #2c3e50;
+      pointer-events: none;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+  `;
+  document.head.appendChild(style);
+});
