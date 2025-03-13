@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مشروع مخططات التدفق</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="toolbar">
+        <button class="sidebar-toggle">Toggle Sidebar</button>
+
+        <button id="undoBtn"><i class="fas fa-undo"></i> تراجع</button>
+        <button id="redoBtn"><i class="fas fa-redo"></i> إعادة</button>
+        <button id="zoomInBtn"><i class="fas fa-search-plus"></i> تكبير</button>
+        <button id="zoomOutBtn">
+          <i class="fas fa-search-minus"></i> تصغير
+        </button>
+        <button id="exportBtn"><i class="fas fa-file-export"></i> تصدير</button>
+        <button id="clearBtn"><i class="fas fa-trash-alt"></i> مسح</button>
+        <!-- إضافة في index.html ضمن قسم .toolbar -->
+        <div class="style-controls">
+          <div class="control-group">
+            <label>خلفية:</label>
+            <select id="backgroundStyleSelect">
+              <option value="grid">شبكة</option>
+              <option value="dots">نقاط</option>
+              <option value="lines">خطوط</option>
+              <option value="none">بدون</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>الخط:</label>
+            <select id="fontStyleSelect">
+              <option value="normal">عادي</option>
+              <option value="bold">سميك</option>
+            </select>
+          </div>
+        </div>
+        <div class="project-name-container">
+          <h1 contenteditable="true" id="projectName">اسم المشروع</h1>
+        </div>
+      </div>
+    </header>
+    <div class="app-container">
+      <aside class="sidebar">
+        <h2>الأدوات</h2>
+        <div class="tool" draggable="true" data-shape="annotation">
+          <i class="fas fa-font"></i> Annotation
+        </div>
+        <div class="tool" draggable="true" data-shape="start">
+          <i class="fas fa-play"></i> Start
+        </div>
+        <div class="tool" draggable="true" data-shape="process">
+          <i class="fas fa-square"></i> Process
+        </div>
+        <div class="tool" draggable="true" data-shape="input-output">
+          <i class="fas fa-sliders-h"></i> Input/Output
+        </div>
+        <div class="tool" draggable="true" data-shape="decision">
+          <i class="fas fa-gem"></i> Decision
+        </div>
+        <div class="tool" draggable="true" data-shape="connector">
+          <i class="fas fa-circle"></i> Connector
+        </div>
+        <div class="tool" draggable="true" data-shape="end">
+          <i class="fas fa-stop"></i> End
+        </div>
+        <div class="tool" draggable="true" data-shape="loop">
+          <i class="fas fa-redo-alt"></i> Loop
+        </div>
+      </aside>
+      <main class="canvas" id="canvasArea">
+        <div class="canvas-content" id="canvasContent">
+          <svg class="connections" id="connections">
+            <defs>
+              <marker
+                id="arrow"
+                markerWidth="12"
+                markerHeight="12"
+                refX="6"
+                refY="3"
+                orient="auto"
+                markerUnits="strokeWidth"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="#2c3e50"></path>
+              </marker>
+            </defs>
+          </svg>
+          <div class="nodes-container" id="nodesContainer"></div>
+        </div>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
