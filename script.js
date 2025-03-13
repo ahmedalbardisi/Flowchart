@@ -10,12 +10,8 @@ const zoomOutBtn = document.getElementById("zoomOutBtn");
 const exportBtn = document.getElementById("exportBtn");
 const clearBtn = document.getElementById("clearBtn");
 const projectNameInput = document.getElementById("projectName");
-
-/* إضافة المتغيرات في بداية script.js بعد المتغيرات الأخرى */
 const backgroundStyleSelect = document.getElementById("backgroundStyleSelect");
 const fontStyleSelect = document.getElementById("fontStyleSelect");
-
-/* إضافة هذه الوظائف بعد دالة clearProject() */
 
 /* دالة لتغيير نمط الخلفية */
 function changeBackgroundStyle(style) {
@@ -858,7 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// أضف هذا الكود في نهاية ملف script.js
+// كود الموبايل
 
 document.addEventListener('DOMContentLoaded', function() {
   // الحصول على جميع أدوات الشريط الجانبي والكانفاس
