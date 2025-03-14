@@ -10,8 +10,12 @@ const zoomOutBtn = document.getElementById("zoomOutBtn");
 const exportBtn = document.getElementById("exportBtn");
 const clearBtn = document.getElementById("clearBtn");
 const projectNameInput = document.getElementById("projectName");
+
+/* إضافة المتغيرات في بداية script.js بعد المتغيرات الأخرى */
 const backgroundStyleSelect = document.getElementById("backgroundStyleSelect");
 const fontStyleSelect = document.getElementById("fontStyleSelect");
+
+/* إضافة هذه الوظائف بعد دالة clearProject() */
 
 /* دالة لتغيير نمط الخلفية */
 function changeBackgroundStyle(style) {
@@ -851,140 +855,5 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleButton.addEventListener('click', function() {
       sidebar.classList.toggle('active');
     });
-  }
-});
-
-// كود الموبايل
-
-document.addEventListener('DOMContentLoaded', function() {
-  // الحصول على جميع أدوات الشريط الجانبي والكانفاس
-  const sidebarTools = document.querySelectorAll('.tool');
-  const canvasContent = document.getElementById('canvasContent');
-  
-  // تعريف المتغيرات الضرورية
-  let selectedShape = null;
-  
-  // بديل أبسط: استخدام نظام انقر-واسحب بدلاً من السحب والإفلات التقليدي على الجوال
-  sidebarTools.forEach(tool => {
-    // استخدام حدث النقر بدلاً من اللمس
-    tool.addEventListener('click', function() {
-      // تحديد الشكل المُختار
-      selectedShape = this.dataset.shape;
-      
-      // إضافة فئة مرئية للعنصر المُختار
-      sidebarTools.forEach(t => t.classList.remove('selected-tool'));
-      this.classList.add('selected-tool');
-      
-      // تغيير مؤشر الماوس على الكانفاس للإشارة إلى أنه يمكن وضع العنصر
-      canvasContent.style.cursor = 'crosshair';
-      
-      // إظهار رسالة للمستخدم (اختياري)
-      showMessage('انقر على اللوحة لوضع عنصر ' + this.textContent.trim());
-    });
-  });
-  
-  // معالجة النقر على الكانفاس لوضع العنصر
-  canvasContent.addEventListener('click', function(e) {
-    // التحقق من وجود شكل مُختار
-    if (!selectedShape) return;
-    
-    // حساب إحداثيات الموضع
-    const rect = canvasContent.getBoundingClientRect();
-    
-    // حساب الإحداثيات المناسبة مع مراعاة التكبير/التصغير والتمرير
-    let x, y;
-    
-    if (e.type === 'click') {
-      // حدث نقر عادي (ماوس)
-      x = (e.clientX - rect.left) / scale;
-      y = (e.clientY - rect.top) / scale;
-    } else {
-      // حدث لمس (لا يستخدم حالياً ولكن يمكن استخدامه لاحقاً)
-      const touch = e.touches[0];
-      x = (touch.clientX - rect.left) / scale;
-      y = (touch.clientY - rect.top) / scale;
-    }
-    
-    // إنشاء العقدة في الموضع المحدد
-    createNode(selectedShape, x, y, null, "", true);
-    
-    // إعادة تعيين الحالة
-    selectedShape = null;
-    sidebarTools.forEach(t => t.classList.remove('selected-tool'));
-    canvasContent.style.cursor = 'default';
-    
-    // إخفاء الرسالة (إذا كانت مرئية)
-    hideMessage();
-  });
-  
-  // معالجة اللمس على الكانفاس للأجهزة اللمسية
-  canvasContent.addEventListener('touchend', function(e) {
-    // منع السلوك الافتراضي لتجنب التكبير أو التمرير
-    if (selectedShape) {
-      e.preventDefault();
-      
-      // حساب إحداثيات الموضع
-      const rect = canvasContent.getBoundingClientRect();
-      const touch = e.changedTouches[0];
-      
-      const x = (touch.clientX - rect.left) / scale;
-      const y = (touch.clientY - rect.top) / scale;
-      
-      // إنشاء العقدة في الموضع المحدد
-      createNode(selectedShape, x, y, null, "", true);
-      
-      // إعادة تعيين الحالة
-      selectedShape = null;
-      sidebarTools.forEach(t => t.classList.remove('selected-tool'));
-      canvasContent.style.cursor = 'default';
-      
-      // إخفاء الرسالة (إذا كانت مرئية)
-      hideMessage();
-    }
-  }, { passive: false });
-  
-  // إضافة الأنماط CSS للأدوات المُختارة ورسائل المساعدة
-  const style = document.createElement('style');
-  style.textContent = `
-    .selected-tool {
-      background-color: #3498db;
-      color: white;
-      box-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-    }
-    
-    #message-box {
-      position: fixed;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(52, 152, 219, 0.9);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 4px;
-      z-index: 1000;
-      font-size: 14px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      transition: opacity 0.3s;
-      opacity: 0;
-      pointer-events: none;
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // إضافة صندوق الرسائل إلى DOM
-  const messageBox = document.createElement('div');
-  messageBox.id = 'message-box';
-  document.body.appendChild(messageBox);
-  
-  // دوال مساعدة للرسائل
-  function showMessage(text) {
-    messageBox.textContent = text;
-    messageBox.style.opacity = '1';
-    // إخفاء الرسالة تلقائياً بعد 3 ثوانٍ
-    setTimeout(hideMessage, 3000);
-  }
-  
-  function hideMessage() {
-    messageBox.style.opacity = '0';
   }
 });
