@@ -666,5 +666,7 @@ header {
   }
 }
 
-
+.node.annotation:hover {
+    border: 1px solid;
+}
 
