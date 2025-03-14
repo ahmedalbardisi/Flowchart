@@ -12,6 +12,9 @@
   </head>
   <body>
     <header>
+      <div class="project-name-container">
+        <h1 contenteditable="true" id="projectName">اسم المشروع</h1>
+      </div>
       <div class="toolbar">
         <button class="sidebar-toggle">menu</button>
         <button id="undoBtn"><i class="fas fa-undo"></i> تراجع</button>
@@ -20,7 +23,9 @@
         <button id="zoomOutBtn">
           <i class="fas fa-search-minus"></i> تصغير
         </button>
-        <button id="exportBtn"><i class="fas fa-file-export"></i> تصدير</button>
+        <button id="exportBtn">
+          <i class="fas fa-file-export"></i> تصدير الصورة (PNG)
+        </button>
         <button id="clearBtn"><i class="fas fa-trash-alt"></i> مسح</button>
         <div class="style-controls">
           <div class="control-group">
@@ -39,9 +44,6 @@
               <option value="bold">سميك</option>
             </select>
           </div>
-        </div>
-        <div class="project-name-container">
-          <h1 contenteditable="true" id="projectName">اسم المشروع</h1>
         </div>
       </div>
     </header>
